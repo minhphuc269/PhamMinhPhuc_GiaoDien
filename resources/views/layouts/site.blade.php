@@ -17,7 +17,9 @@
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet" href="{{ asset('https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap') }}">
     <link rel="stylesheet" href="{{ asset('bootstrap/css/fontawesome.min.css') }}">
+
     <link rel="stylesheet" href="{{ asset('bootstrap/css/styles.css') }}">
+    <link rel="stylesheet" href="fontawesome-free-6.5.2-web/css/all.min.css">
 
     @yield('header')
 </head>
@@ -70,16 +72,16 @@
                           </div>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
+                            <a class="nav-link" href="{{route('site.home')}}">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="about.html">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="product.html">Shop</a>
+                            <a class="nav-link" href="{{route('site.product')}}">Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
+                            <a class="nav-link" href="{{route('site.contact')}}">Contact</a>
                         </li>
                     </ul>
                 </div>
