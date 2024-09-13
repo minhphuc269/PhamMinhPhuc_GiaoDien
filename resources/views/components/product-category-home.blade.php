@@ -1,4 +1,4 @@
-<!-- Start Categories of The Month -->
+{{-- <!-- Start Categories of The Month -->
 <section class="container py-5">
     <div class="row text-center pt-3">
         <div class="col-lg-6 m-auto">
@@ -27,4 +27,4 @@
         </div>
     </div>
 </section>
-<!-- End Categories of The Month -->
+<!-- End Categories of The Month --> --}}

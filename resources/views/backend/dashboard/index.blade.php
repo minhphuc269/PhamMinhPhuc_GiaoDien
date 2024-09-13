@@ -20,13 +20,13 @@
     <div class="card">
       <div class="card-header">
         <div class="row">
-          <div class="col-12 text-right">
+          {{-- <div class="col-12 text-right">
             NUT
-          </div>
+          </div> --}}
         </div>
       </div>
       <div class="card-body">
-        NOI DUNG
+        Quản lí
       </div>
     </div>
   </section>

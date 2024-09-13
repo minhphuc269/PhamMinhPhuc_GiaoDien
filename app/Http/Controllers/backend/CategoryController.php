@@ -1,9 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\backend;
-
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use App\Models\Category;
 class CategoryController extends Controller
 {
@@ -12,27 +15,48 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $list = Category::where('status','!=',0)
-        ->orderBy('created_at','DESC')
-        ->select("id","name","image","slug")
-        ->get();
-        return view("backend.category.index",compact("list"));
+        $list = Category::where('status', '!=', 0)
+            ->select('category.id', 'category.name', 'category.slug', 'category.image','description','category.parent_id','category.sort_order', 'category.status')
+            ->orderBy('created_at', 'desc')
+            ->get();
+            $htmlparentid = "";
+            $htmlsortorder = "";
+            foreach ($list as $items) {
+                $htmlparentid .= "<option value='$items->id'>" . $items->name . "</option>";
+                $htmlsortorder .= "<option value='" . ($items->sort_order + 1) . "'>Sau: " . $items->name . "</option>";    
+            }
+        return view("backend.category.index", compact('list','htmlparentid','htmlsortorder'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
+    
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        //
+        try {
+            $category = new Category();
+            $category->name = $request->name;
+            $category->slug = Str::of($request->name)->slug('-');
+            $category->description = $request->description;
+            $category->parent_id = $request->parent_id;
+            $category->sort_order = $request->sort_order;
+            //upload image
+            if ($request->image){
+                $exten = $request->file("image")->extension();
+                if (in_array($exten, ['jpg', 'png', 'gif', 'webp'])){
+                    $filename = $category->slug . "." . $exten;
+                    $request->image->move(public_path("images/categorys"), "$filename");
+                    $category->image = "$filename";
+                }
+            }
+            //end upload
+            $category->status = $request->status;
+            $category->created_at = date('Y-m-d H:i:s');
+            $category->created_by = Auth::id() ?? 1;
+            $category->save();
+            return redirect()->route('admin.category.index');
+        }catch (\Exception $e) {return redirect()->back();}
     }
 
     /**
@@ -40,7 +64,12 @@ class CategoryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $category = Category::find($id);
+        if ($category == null)
+        {
+            return redirect()->route('admin.category.index');
+        }
+        return view("backend.category.show", compact('category'));
     }
 
     /**
@@ -48,22 +77,128 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $category = Category::find($id);
+        if($category==null)
+        {
+            return redirect()->route('admin.category.index');
+        }
+        $list = Category::where('status', '!=', 0)
+        ->select('category.id', 'category.name', 'category.slug', 'category.image','description','category.parent_id','category.sort_order', 'category.status')
+            ->orderBy('created_at', 'desc')
+            ->get();
+            $htmlparentid = "";
+            $htmlsortorder = "";
+            foreach ($list as $items) {
+                if($category->parent_id == $items->id)
+                {
+                    $htmlparentid .= "<option selected value='$items->id'>" . $items->name . "</option>";
+                }
+                else
+                {
+                    $htmlparentid .= "<option value='$items->id'>" . $items->name . "</option>";
+                }
+                if($category->sort_order-1==$items->sort_order)
+                {
+                    $htmlsortorder .= "<option selected value='" . ($items->sort_order + 1) . "'>Sau: " . $items->name . "</option>"; 
+                }
+                    $htmlsortorder .= "<option value='" . ($items->sort_order + 1) . "'>Sau: " . $items->name . "</option>";      
+            }
+        return view("backend.category.edit", compact('list','category','htmlparentid','htmlsortorder'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateCategoryRequest $request, string $id)
     {
-        //
+        $category = Category::find($id);
+        if($category==null)
+        {
+            return redirect()->route('admin.category.index');
+        }
+        $category->name = $request->name;
+        $category->slug = Str::of($request->name)->slug('-');
+        $category->description = $request->description;
+        $category->parent_id = $request->parent_id;
+        $category->sort_order = $request->sort_order;
+        //upload image
+        if ($request->image){
+            $exten = $request->file("image")->extension();
+            if (in_array($exten, ['jpg', 'png', 'gif', 'webp'])){
+                $filename = $category->slug . "." . $exten;
+                $request->image->move(public_path("images/categorys"), "$filename");
+                $category->image = "$filename";
+            }
+        }
+        //end upload
+        $category->status = $request->status;
+        $category->updated_at = date('Y-m-d H:i:s');
+        $category->updated_by = Auth::id() ?? 1;
+        $category->save();
+        return redirect()->route('admin.category.index');
     }
-
+    public function trash()
+    {
+        $list = Category::where('status', '=', 0)
+            ->select('id', 'name', 'slug', 'category.image','status')
+            ->orderBy('created_at', 'desc')
+            ->get();
+            return view("backend.category.trash",compact('list'));
+    }
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $category = Category::find($id);
+        if($category==null)
+        {
+            return redirect()->route('admin.category.index');
+        }
+        $category->delete();
+        return redirect()->route('admin.category.trash');
+    }
+    
+    public function status(string $id)
+    {
+        $category = Category::find($id);
+        if($category==null)
+        {
+            return redirect()->route('admin.category.index');
+        }
+        $category->status = ($category->status==2)?1:2;
+        $category->updated_at = date('Y-m-d H:i:s');
+        $category->updated_by = Auth::id() ?? 1;
+        $category->save();
+        return redirect()->route('admin.category.index');
+    }
+    
+    public function delete(string $id)
+    {
+    $category = Category::find($id);
+
+    if ($category == null) {
+        return redirect()->route('admin.category.index');
+    }
+
+    $category->status = 0;
+    $category->updated_at = date('Ymd H:i:s');
+    $category->updated_by = Auth::id() ?? 1;
+    $category->save();
+
+    return redirect()->route('admin.category.index');
+    }
+    public function restore(string $id)
+    {
+        $category = Category::find($id);
+        if($category==null)
+        {
+            return redirect()->route('admin.category.index');
+        }
+        $category->status = 1;
+        $category->created_at = date('Y-m-d H:i:s');
+        $category->created_by = Auth::id() ?? 1;
+        $category->save();
+        return redirect()->route('admin.category.trash');
     }
 }

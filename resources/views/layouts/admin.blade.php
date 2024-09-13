@@ -29,7 +29,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ route('website.logout') }}">
           <i class="fas fa-power-off"></i> Thoát
         </a>
       </li>
@@ -52,7 +52,7 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <a href="{{ route('admin.product.index') }}" class="nav-link">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Sản phẩm
@@ -104,7 +104,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="{{route('admin.order.index')}}" class="nav-link">
               <i class="fas fa-shopping-bag"></i>
               <p>Đơn hàng</p>
             </a>

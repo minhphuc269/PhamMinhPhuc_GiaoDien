@@ -6,26 +6,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="apple-touch-icon" href="{{ asset('img/apple-icon.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/favicon.ico') }}">
 
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/templatemo.css">
-    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/templatemo.css') }}">
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/custom.css') }}">
 
     <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
-    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+    <link rel="stylesheet" href="{{ asset('https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap') }}">
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/fontawesome.min.css') }}">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/css/styles.css"> <!-- Đường dẫn đến file CSS -->
-<!--
-    
-TemplateMo 559 Zay Shop
-
-https://templatemo.com/tm-559-zay-shop
-
--->
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/styles.css') }}."> 
+    <link rel="stylesheet" href="fontawesome-free-6.5.2-web/css/all.min.css">
+    <!-- Đường dẫn đến file CSS -->
 </head>
 
 <body>
@@ -54,11 +49,9 @@ https://templatemo.com/tm-559-zay-shop
     <!-- Header -->
     <nav class="navbar navbar-expand-lg navbar-light shadow">
         <div class="container d-flex justify-content-between align-items-center">
-
             <a class="navbar-brand text-success logo h1 align-self-center" href="index.html">
-                <img class="img-fluid" src="./assets/img/logo.png" alt="" style="width: 150px;">
+                <img class="img-fluid" src="{{ asset('images/logo.png') }}" alt="" style="width: 80px;">
             </a>
-
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -69,24 +62,49 @@ https://templatemo.com/tm-559-zay-shop
 
                         <div class="dropdown">
                             <button class="nav-link">Categories</button>
-                            <div class="dropdown-content">
-                            <a href="#">Watches</a>
-                            <a href="#">Shoes</a>
-                            <a href="#">Accessories</a>
-                            </div>
-                          </div>
+                            <ul class="list-unstyled templatemo-accordion dropdown-content">
+                                <li class="pb-3">
+                                    <a href="#">Gender
+                                        <i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
+                                    </a>
+                                    <ul class="collapse show list-unstyled pl-3">
+                                        <li><a class="text-decoration-none" href="#">Men</a></li>
+                                        <li><a class="text-decoration-none" href="#">Women</a></li>
+                                    </ul>
+                                </li>
+                                <li class="pb-3">
+                                    <a href="#">Sale
+                                        <i class="pull-right fa fa-fw fa-chevron-circle-down mt-1"></i>
+                                    </a>
+                                    <ul id="collapseTwo" class="collapse list-unstyled pl-3">
+                                        <li><a class="text-decoration-none" href="#">Sport</a></li>
+                                        <li><a class="text-decoration-none" href="#">Luxury</a></li>
+                                    </ul>
+                                </li>
+                                <li class="pb-3">
+                                    <a href="#">Product
+                                        <i class="pull-right fa fa-fw fa-chevron-circle-down mt-1"></i>
+                                    </a>
+                                    <ul id="collapseThree" class="collapse list-unstyled pl-3">
+                                        <li><a class="text-decoration-none" href="#">Bag</a></li>
+                                        <li><a class="text-decoration-none" href="#">Sweather</a></li>
+                                        <li><a class="text-decoration-none" href="#">Sunglass</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
+                          <li class="nav-item">
+                            <a class="nav-link" href="{{route('site.home')}}">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="about.html">About</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="product.html">Shop</a>
+                            <a class="nav-link" href="{{route('site.product')}}">Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact.html">Contact</a>
+                            <a class="nav-link" href="{{route('site.contact')}}">Contact</a>
                         </li>
                     </ul>
                 </div>
@@ -135,24 +153,34 @@ https://templatemo.com/tm-559-zay-shop
  <!-- Start Contact -->
     <div class="container">
         <h2>Liên hệ với chúng tôi</h2>
-        <form class="contact-form" action="submit-form.php" method="post" >
-            <div class="form-group">
-                <label for="name">Họ và tên:</label>
-                <input type="text" id="name" name="user_name" required>
+        <form class="col-md-9 m-auto" method="post" role="form">
+            <div class="row">
+                <div class="form-group col-md-6 mb-3">
+                    <label for="inputname">Họ Tên</label>
+                    <input type="text" class="form-control mt-1" id="name" name="name" placeholder="Họ Tên">
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="inputemail">Email</label>
+                    <input type="email" class="form-control mt-1" id="email" name="email" placeholder="Email">
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="phone">Số điện thoại</label>
+                    <input type="phone" class="form-control mt-1" id="phone" name="phone" placeholder="Số điện thoại">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="user_email" required>
+            <div class="mb-3">
+                <label for="inputsubject">Tiêu đề</label>
+                <input type="text" class="form-control mt-1" id="subject" name="subject" placeholder="Tiêu đề">
             </div>
-            <div class="form-group">
-                <label for="phone">Số điện thoại</label>
-                <input type="text" id="phone" name="user_phone" required>
+            <div class="mb-3">
+                <label for="inputmessage">Nội dung</label>
+                <textarea class="form-control mt-1" id="message" name="message" placeholder="Nội dung" rows="8"></textarea>
             </div>
-            <div class="form-group">
-                <label for="message">Nội dung:</label>
-                <textarea id="message" name="user_message" rows="4" required></textarea>
+            <div class="row">
+                <div class="col text-end mt-2">
+                    <button type="submit" class="btn btn-success btn-lg px-3">Gửi</button>
+                </div>
             </div>
-            <button type="submit">Gửi</button>
         </form>
         <h1>Thông tin liên hệ</h1>
     <p>Nếu bạn có bất kỳ câu hỏi hoặc muốn liên hệ với chúng tôi, vui lòng sử dụng thông tin dưới đây:</p>
@@ -164,7 +192,7 @@ https://templatemo.com/tm-559-zay-shop
     <h3>Google Map</h3>
     <div class="map my-3">
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.6889915209813!2d106.77566677485771!3d10.835095689317246!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317527046a5c9b93%3A0x7005b0fbba5feca4!2zMjIgxJDGsOG7nW5nIHPhu5EgOSwgVMSDbmcgTmjGoW4gUGjDuiBCLCBRdeG6rW4gOSwgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1700103474111!5m2!1svi!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div> 
+    </div> 
     </div>
 <!-- End Contact -->
     <!-- Start Footer -->
@@ -262,11 +290,11 @@ https://templatemo.com/tm-559-zay-shop
     <!-- End Footer -->
 
     <!-- Start Script -->
-    <script src="assets/js/jquery-1.11.0.min.js"></script>
-    <script src="assets/js/jquery-migrate-1.2.1.min.js"></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/templatemo.js"></script>
-    <script src="assets/js/custom.js"></script>
+    <script src="{{ asset('bootstrap/js/jquery-1.11.0.min.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/jquery-migrate-1.2.1.min.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/templatemo.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/custom.js') }}"></script>
     <!-- End Script -->
 </body>
 
